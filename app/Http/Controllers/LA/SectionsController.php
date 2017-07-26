@@ -17,37 +17,37 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
-use App\Models\Employee;
+use App\Models\Section;
 
-class EmployeesController extends Controller
+class SectionsController extends Controller
 {
 	public $show_action = true;
 	public $view_col = 'name';
-	public $listing_cols = ['id', 'name', 'designation', 'gender', 'mobile', 'mobile2', 'email', 'dept', 'city', 'address', 'about', 'date_birth', 'date_hire', 'date_left', 'salary_cur', 'school'];
+	public $listing_cols = ['id', 'name', 'school'];
 	
 	public function __construct() {
 		// Field Access of Listing Columns
 		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 			$this->middleware(function ($request, $next) {
-				$this->listing_cols = ModuleFields::listingColumnAccessScan('Employees', $this->listing_cols);
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Sections', $this->listing_cols);
 				return $next($request);
 			});
 		} else {
-			$this->listing_cols = ModuleFields::listingColumnAccessScan('Employees', $this->listing_cols);
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Sections', $this->listing_cols);
 		}
 	}
 	
 	/**
-	 * Display a listing of the Employees.
+	 * Display a listing of the Sections.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index()
 	{
-		$module = Module::get('Employees');
+		$module = Module::get('Sections');
 		
 		if(Module::hasAccess($module->id)) {
-			return View('la.employees.index', [
+			return View('la.sections.index', [
 				'show_actions' => $this->show_action,
 				'listing_cols' => $this->listing_cols,
 				'module' => $module
@@ -58,7 +58,7 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new employee.
+	 * Show the form for creating a new section.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -68,16 +68,16 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Store a newly created employee in database.
+	 * Store a newly created section in database.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request)
 	{
-		if(Module::hasAccess("Employees", "create")) {
+		if(Module::hasAccess("Sections", "create")) {
 		
-			$rules = Module::validateRules("Employees", $request);
+			$rules = Module::validateRules("Sections", $request);
 			
 			$validator = Validator::make($request->all(), $rules);
 			
@@ -85,9 +85,9 @@ class EmployeesController extends Controller
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
 			
-			$insert_id = Module::insert("Employees", $request);
+			$insert_id = Module::insert("Sections", $request);
 			
-			return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+			return redirect()->route(config('laraadmin.adminRoute') . '.sections.index');
 			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
@@ -95,30 +95,30 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Display the specified employee.
+	 * Display the specified section.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id)
 	{
-		if(Module::hasAccess("Employees", "view")) {
+		if(Module::hasAccess("Sections", "view")) {
 			
-			$employee = Employee::find($id);
-			if(isset($employee->id)) {
-				$module = Module::get('Employees');
-				$module->row = $employee;
+			$section = Section::find($id);
+			if(isset($section->id)) {
+				$module = Module::get('Sections');
+				$module->row = $section;
 				
-				return view('la.employees.show', [
+				return view('la.sections.show', [
 					'module' => $module,
 					'view_col' => $this->view_col,
 					'no_header' => true,
 					'no_padding' => "no-padding"
-				])->with('employee', $employee);
+				])->with('section', $section);
 			} else {
 				return view('errors.404', [
 					'record_id' => $id,
-					'record_name' => ucfirst("employee"),
+					'record_name' => ucfirst("section"),
 				]);
 			}
 		} else {
@@ -127,28 +127,28 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified employee.
+	 * Show the form for editing the specified section.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($id)
 	{
-		if(Module::hasAccess("Employees", "edit")) {			
-			$employee = Employee::find($id);
-			if(isset($employee->id)) {	
-				$module = Module::get('Employees');
+		if(Module::hasAccess("Sections", "edit")) {			
+			$section = Section::find($id);
+			if(isset($section->id)) {	
+				$module = Module::get('Sections');
 				
-				$module->row = $employee;
+				$module->row = $section;
 				
-				return view('la.employees.edit', [
+				return view('la.sections.edit', [
 					'module' => $module,
 					'view_col' => $this->view_col,
-				])->with('employee', $employee);
+				])->with('section', $section);
 			} else {
 				return view('errors.404', [
 					'record_id' => $id,
-					'record_name' => ucfirst("employee"),
+					'record_name' => ucfirst("section"),
 				]);
 			}
 		} else {
@@ -157,7 +157,7 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Update the specified employee in storage.
+	 * Update the specified section in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  int  $id
@@ -165,9 +165,9 @@ class EmployeesController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		if(Module::hasAccess("Employees", "edit")) {
+		if(Module::hasAccess("Sections", "edit")) {
 			
-			$rules = Module::validateRules("Employees", $request, true);
+			$rules = Module::validateRules("Sections", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			
@@ -175,9 +175,9 @@ class EmployeesController extends Controller
 				return redirect()->back()->withErrors($validator)->withInput();;
 			}
 			
-			$insert_id = Module::updateRow("Employees", $request, $id);
+			$insert_id = Module::updateRow("Sections", $request, $id);
 			
-			return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+			return redirect()->route(config('laraadmin.adminRoute') . '.sections.index');
 			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
@@ -185,18 +185,18 @@ class EmployeesController extends Controller
 	}
 
 	/**
-	 * Remove the specified employee from storage.
+	 * Remove the specified section from storage.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
 	{
-		if(Module::hasAccess("Employees", "delete")) {
-			Employee::find($id)->delete();
+		if(Module::hasAccess("Sections", "delete")) {
+			Section::find($id)->delete();
 			
 			// Redirecting to index() method
-			return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+			return redirect()->route(config('laraadmin.adminRoute') . '.sections.index');
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -209,11 +209,11 @@ class EmployeesController extends Controller
 	 */
 	public function dtajax()
 	{
-		$values = DB::table('employees')->select($this->listing_cols)->whereNull('deleted_at');
+		$values = DB::table('sections')->select($this->listing_cols)->whereNull('deleted_at');
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
 
-		$fields_popup = ModuleFields::getModuleFields('Employees');
+		$fields_popup = ModuleFields::getModuleFields('Sections');
 		
 		for($i=0; $i < count($data->data); $i++) {
 			for ($j=0; $j < count($this->listing_cols); $j++) { 
@@ -222,7 +222,7 @@ class EmployeesController extends Controller
 					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
 				}
 				if($col == $this->view_col) {
-					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/sections/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
 				}
 				// else if($col == "author") {
 				//    $data->data[$i][$j];
@@ -231,12 +231,12 @@ class EmployeesController extends Controller
 			
 			if($this->show_action) {
 				$output = '';
-				if(Module::hasAccess("Employees", "edit")) {
-					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+				if(Module::hasAccess("Sections", "edit")) {
+					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/sections/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
 				}
 				
-				if(Module::hasAccess("Employees", "delete")) {
-					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
+				if(Module::hasAccess("Sections", "delete")) {
+					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.sections.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
 					$output .= Form::close();
 				}

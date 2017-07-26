@@ -71,4 +71,24 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::post(config('laraadmin.adminRoute') . '/create_backup_ajax', 'LA\BackupsController@create_backup_ajax');
 	Route::get(config('laraadmin.adminRoute') . '/downloadBackup/{id}', 'LA\BackupsController@downloadBackup');
 
+
+	/* ================== Guardians ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/guardians', 'LA\GuardiansController');
+	Route::get(config('laraadmin.adminRoute') . '/guardian_dt_ajax', 'LA\GuardiansController@dtajax');
+
+	/* ================== Streams ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/streams', 'LA\StreamsController');
+	Route::get(config('laraadmin.adminRoute') . '/stream_dt_ajax', 'LA\StreamsController@dtajax');
+
+	/* ================== Sections ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/sections', 'LA\SectionsController');
+	Route::get(config('laraadmin.adminRoute') . '/section_dt_ajax', 'LA\SectionsController@dtajax');
+
+	/* ================== Schools ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/schools', 'LA\SchoolsController');
+	Route::get(config('laraadmin.adminRoute') . '/school_dt_ajax', 'LA\SchoolsController@dtajax');
+
+	/* ================== Students ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/students', 'LA\StudentsController');
+	Route::get(config('laraadmin.adminRoute') . '/student_dt_ajax/{stream}', 'LA\StudentsController@dtajax');
 });

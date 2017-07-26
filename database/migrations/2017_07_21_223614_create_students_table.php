@@ -8,7 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Dwij\Laraadmin\Models\Module;
 
-class CreateEmployeesTable extends Migration
+class CreateStudentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,22 +17,23 @@ class CreateEmployeesTable extends Migration
      */
     public function up()
     {
-        Module::generate("Employees", 'employees', 'name', 'fa-group', [
-            ["name", "Name", "Name", false, "", 5, 250, true],
-            ["designation", "Designation", "String", false, "", 0, 50, true],
-            ["gender", "Gender", "Radio", false, "Male", 0, 0, true, ["Male","Female"]],
-            ["mobile", "Mobile", "Mobile", false, "", 10, 20, true],
-            ["mobile2", "Alternative Mobile", "Mobile", false, "", 10, 20, false],
-            ["email", "Email", "Email", true, "", 5, 250, true],
-            ["dept", "Department", "Dropdown", false, "0", 0, 0, true, "@departments"],
-            ["city", "City", "String", false, "", 0, 50, false],
-            ["address", "Address", "Address", false, "", 0, 1000, false],
-            ["about", "About", "String", false, "", 0, 0, false],
-            ["date_birth", "Date of Birth", "Date", false, "1990-01-01", 0, 0, false],
-            ["date_hire", "Hiring Date", "Date", false, "date('Y-m-d')", 0, 0, false],
-            ["date_left", "Resignation Date", "Date", false, "1990-01-01", 0, 0, false],
-            ["salary_cur", "Current Salary", "Decimal", false, "0.0", 0, 2, false],
-            ["school", "School", "Dropdown", false, "", 0, 0, false, "@schools"],
+        Module::generate("Students", 'students', 'first_name', 'fa-user', [
+            ["first_name", "First Name", "Name", false, "", 3, 256, true],
+            ["last_name", "Last Name", "Name", false, "", 0, 256, false],
+            ["mobile", "Mobile No", "Mobile", true, "", 10, 10, true],
+            ["mobile2", "Alternate Mobile No", "Mobile", false, "", 10, 10, false],
+            ["gender", "Gender", "Radio", false, "Male", 0, 0, true, ["Male","Female","Others"]],
+            ["email", "Personal Email ID", "Email", false, "", 0, 256, true],
+            ["email2", "School Email ID", "Email", false, "", 0, 256, true],
+            ["registration_no", "Registration No", "Integer", true, "", 0, 11, true],
+            ["address", "Address", "Address", false, "", 0, 256, false],
+            ["about", "About", "String", false, "", 0, 256, false],
+            ["dob", "Date of Birth", "Date", false, "", 0, 0, false],
+            ["admission_date", "Date of Admission", "Date", false, "", 0, 0, false],
+            ["guardian", "Guardian", "Dropdown", false, "", 0, 0, true, "@guardians"],
+            ["stream", "Stream", "Dropdown", false, "", 0, 0, true, "@streams"],
+            ["section", "Section", "Dropdown", false, "", 0, 0, true, "@sections"],
+            ["school", "School", "Dropdown", false, "", 0, 0, true, "@schools"],
         ]);
 		
 		/*
@@ -78,8 +79,8 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('employees')) {
-            Schema::drop('employees');
+        if (Schema::hasTable('students')) {
+            Schema::drop('students');
         }
     }
 }
